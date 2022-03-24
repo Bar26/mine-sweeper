@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<button onclick="init(4,2)" class="begginer">beginner</button>
+<button onclick="init(8,12)" class="begginer">medium</button>
+<button onclick="init(12,30)" class="begginer">expert</button>
+<button onclick="resetLevel()" class="smiley">😊</button>
+<div class="heart">lifes: <span></span></div>
+<div class="hint"> hints:
+    <button onclick="hintClicked(this)" class="last">💡</button>
+    <button onclick="hintClicked(this)" class="second">💡</button>
+    <button onclick="hintClicked(this)" class="last">💡</button>
+</div>
+<div class="safeClick">
+    <div>
+         <button onclick="revealSafeClick()"> safe click</button>
+         <div>clicks remained:<span class="safeCount"></span></div>
+        </div>
+ 
+
+<body onload="init()">
+    <div class="timer"></div>
+    <div class="container">
+
+        <!-- <img src="img/bomb.jpg" /> -->
+
+        <!-- <img src="img/flag.jpg" /> -->
+    </div>
+
+
+
+
+    <script src="js/utils.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
