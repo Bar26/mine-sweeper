@@ -1,6 +1,11 @@
 
 body{
     text-align: center;
+    background-color: rgba(245, 245, 220, 0.603);
+}
+
+*{
+    font-style: italic;
 }
 
 img{
@@ -20,6 +25,9 @@ table{
     border: 2px solid black;
 }
 
+button{
+    cursor: pointer;
+}
 
 td{
     height: 2em;
@@ -43,14 +51,15 @@ span.content{
 }
 
 .timer{
-    background-color: red;
-    color: black;
+    background-color: rgba(0, 0, 0, 0.74);
+    color: red;
     width: 100px;
     height: 30px;
     font-size: x-large;
     text-align: center;
     display: inline-block;
     margin-top: 100px;
+    margin-bottom: 10px;
 
 }
 
@@ -58,9 +67,18 @@ span.content{
     background-color:burlywood;
 }
 
+.hint{
+    font-size: x-large;
+    position: absolute;
+    top: 160px;
+    left: 1070px;
+
+}
+
 .hint button{
     border-radius: 50px;
     border: lightskyblue 1px solid;
+    font-size: large;
    
 }
 
@@ -69,14 +87,54 @@ span.content{
     border: 0ch;
 }
 
+.safeClick{
+   position: absolute;
+   top: 128px;
+   left: 700px;
+
+}
+
 .safeClick button{
     background-color: rgba(135, 206, 250, 0.877);
     width: 130px;
     height: 50px;
+    font-size: large;
+    color: white;
+    
 }
 
 .revealed{
     outline: 3px rgb(58, 173, 245) solid;
 }
 
+.level{
+    background-color: rgba(46, 139, 86, 0.788);
+    color: whitesmoke;
+    font-size: large;
+    position: absolute;
+    top: 90px;
+    width:90px;
+}
 
+.level.beginner{
+    left: 810px;
+
+}
+.level.medium{
+    left: 910px;
+    
+}
+.level.expert{
+    left: 1010px;
+}
+
+
+.heart{
+    font-size: large;
+}
+
+.smiley{
+    background-color: rgba(245, 245, 220, 0.603);
+    border: 0px;
+    font-size: x-large;
+}

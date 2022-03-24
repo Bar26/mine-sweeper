@@ -25,8 +25,7 @@ function createBoard(size) {                    //DONE
 }
 
 
-
-function getRandomEmptyCellIdx(board) {        //DONE
+function getRandomEmptyCellIdx(board) {        
     var emptyCellsIndx = []
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
@@ -38,7 +37,6 @@ function getRandomEmptyCellIdx(board) {        //DONE
     var cellIdx = emptyCellsIndx[randomIdx]
     return cellIdx
 }
-
 
 
 function createMines(board, numMines) {
@@ -81,6 +79,7 @@ function setMinesNegsCount(board) {
         }
     }
 }
+
 function printMat(mat, selector) {
 
     var strHTML = '<table><tbody>';
@@ -119,34 +118,6 @@ function printMat(mat, selector) {
 
 
 }
-
-
-function rightclick(elcell, cell) {     //TODO
-    if (cell.isShown) return
-    var elFlag = elcell.querySelector('span.flag')
-    gNumClicks++
-    if (gNumClicks === 1) gTimeInterval = setInterval(timerCycle, 1000)
-    if (cell.isMarked) {
-        cell.isMarked = false
-        elFlag.style.display = 'none'
-        if (cell.isMine) {
-            gCountMarked--
-        }
-
-    } else {
-        cell.isMarked = true
-        elFlag.style.display = 'block'
-        if (cell.isMine) {
-            gCountMarked++
-            if (gCellsShown === gCellsCount && gCountMarked === gNumMines) {
-                gIsWin = true
-                gameOver()
-            }
-        }
-    }
-
-}
-
 
 
 function showNegs(board, cellI, cellJ) {
@@ -206,47 +177,9 @@ function resetLevel(){
 }
 
 
-// window.addEventListener('contextmenu', function (e) { 
-//     console.log('hi')
-
-//     e.preventDefault(); 
-//   }, false);
-
-
-
-function renderCell(location, value) {
-    var elCell = document.querySelector(`.cell-${location.i}-${location.j}`);
-    elCell.innerHTML = value;
-}
-
-
-
-function getClassName(location) {
-    var cellClass = 'cell-' + location.i + '-' + location.j;
-    return cellClass;
-}
-
-// function getRandomColor() {
-//     var letters = '0123456789ABCDEF';
-//     var color = '#';
-//     for (var i = 0; i < 6; i++) {
-//         color += letters[Math.floor(Math.random() * 16)];
-//     }
-//     return color;
+// function getClassName(location) {
+//     var cellClass = 'cell-' + location.i + '-' + location.j;
+//     return cellClass;
 // }
 
-
-
-// function getRandomIntInclusive(min, max) {
-//     return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
-
-
-  // var elCells = document.querySelectorAll(`.noContextMenu`)           מבטל קליק ימני לכולם בבת אחת
-    // for (var i = 0; i < elCells.length; i++) {
-    //     elCells[i].addEventListener('contextmenu', function (e) {
-    //         rightclick(elCells[i])
-    //         e.preventDefault();
-    //     }, false);
-    // }
 

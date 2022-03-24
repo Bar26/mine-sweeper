@@ -35,9 +35,6 @@ function init(size = 4, numMines = 2) {
 
     elSafeCount.innerHTML = '3'
     gSafeClicks = 3
-
-
-
     gMines = []
     gSize = size
     gNumMines = numMines
@@ -52,10 +49,11 @@ function init(size = 4, numMines = 2) {
     gCellsShown = 0
     gCountMarked = 0
     gNumClicks = 0
-
     gSec = 0
     gMin = 0
 }
+
+
 
 
 function cellClicked(elCell, i, j) {
@@ -103,6 +101,32 @@ function cellClicked(elCell, i, j) {
     }
 }
 
+
+function rightclick(elcell, cell) {     //TODO
+    if (cell.isShown) return
+    var elFlag = elcell.querySelector('span.flag')
+    gNumClicks++
+    if (gNumClicks === 1) gTimeInterval = setInterval(timerCycle, 1000)
+    if (cell.isMarked) {
+        cell.isMarked = false
+        elFlag.style.display = 'none'
+        if (cell.isMine) {
+            gCountMarked--
+        }
+
+    } else {
+        cell.isMarked = true
+        elFlag.style.display = 'block'
+        if (cell.isMine) {
+            gCountMarked++
+            if (gCellsShown === gCellsCount && gCountMarked === gNumMines) {
+                gIsWin = true
+                gameOver()
+            }
+        }
+    }
+
+}
 
 
 function gameOver() {
