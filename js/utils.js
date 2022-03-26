@@ -5,8 +5,8 @@ const NORMAL = '😊'
 const LOOSE = '🤯'
 const WIN = '😎'
 
-
-function createBoard(size) {                    //DONE
+function createBoard(size) {    
+    var gData = 0              
     var board = []
     for (var i = 0; i < size; i++) {
         var row = []
@@ -16,6 +16,7 @@ function createBoard(size) {                    //DONE
                 isShown: false,
                 isMine: false,
                 isMarked: false,
+                data: gData++
             }
             row.push(cell)
         }
@@ -25,7 +26,7 @@ function createBoard(size) {                    //DONE
 }
 
 
-function getRandomEmptyCellIdx(board) {        
+function getRandomEmptyCellIdx(board) {
     var emptyCellsIndx = []
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
@@ -39,20 +40,38 @@ function getRandomEmptyCellIdx(board) {
 }
 
 
-function createMines(board, numMines) {
-    var randomRowIdx = Math.floor(Math.random() * board.length)
-    var randomColIdx = Math.floor(Math.random() * board.length)
-    board[randomRowIdx][randomColIdx].isMine = true
+function createMines(board, numMines, i, j) {
+    console.log(gIs7Boom)
 
-    for (var i = 0; i < numMines - 1; i++) {
-        var cellIdx = getRandomEmptyCellIdx(board)
-        board[cellIdx.i][cellIdx.j].isMine = true
+    if (!gIs7Boom) {
+        var randomRowIdx = i
+        var randomColIdx = j
+        while (randomRowIdx === i && randomColIdx === j) {
+            randomRowIdx = Math.floor(Math.random() * board.length)
+            randomColIdx = Math.floor(Math.random() * board.length)
+        }
+        board[randomRowIdx][randomColIdx].isMine = true
 
+        for (var i = 0; i < numMines - 1; i++) {
+            var cellIdx = getRandomEmptyCellIdx(board)
+            board[cellIdx.i][cellIdx.j].isMine = true
+
+        }
+    } else {
+        for (var i = 0; i < board.length; i++) {
+            for (var j = 0; j < board.length; j++) {
+                var cell = board[i][j]
+                console.log(cell.data)
+                var data = cell.data
+                var dataStr = cell.data + ''
+                console.log(data%7===0, dataStr.includes('7'))
+                if (data % 7 === 0 || dataStr.includes('7')) cell.isMine = true
+            }
+        }
     }
 }
 
-
-function changeMineLocation(cell, elContent){
+function changeMineLocation(cell, elContent) {
     cell.isMine = false
     elContent.innerHTML = `${cell.minesAroundCount}`
     var newMinePos = getRandomEmptyCellIdx(gBoard)
@@ -91,7 +110,6 @@ function printMat(mat, selector) {
             if (mat[i][j].isMine) {
                 cellContent = MINE
                 gMines.push({ i, j })
-
             }
             else if (currCell.minesAroundCount) cellContent = currCell.minesAroundCount
             else cellContent = ''
@@ -103,21 +121,11 @@ function printMat(mat, selector) {
 
     strHTML += '</tbody></table>';
     var elContainer = document.querySelector(selector);
+    console.log(elContainer)
     elContainer.innerHTML = strHTML;
 
-    for (let i = 0; i < mat.length; i++) {
-        for (let j = 0; j < mat.length; j++) {
-            let cell = mat[i][j]
-            let elCell = document.querySelector(`.cell-${i}-${j}`)
-            elCell.addEventListener('contextmenu', function (e) {
-                e.preventDefault();
-                rightclick(elCell, cell, i, j)
-            }, false);
-        }
-    }
-
-
 }
+
 
 
 function showNegs(board, cellI, cellJ) {
@@ -127,19 +135,20 @@ function showNegs(board, cellI, cellJ) {
             if (j < 0 || j > board.length - 1) continue
             if (i === cellI && j === cellJ) continue
             var neg = board[i][j]
-            if (!neg.isShown) {
+            if (!neg.isShown && !neg.isMarked) {
                 neg.isShown = true
                 gCellsShown++
                 console.log(gCellsShown)
+                var elNeg = document.querySelector(`.cell-${i}-${j}`)
+                elNeg.classList.add('shown')
+                var elContent = elNeg.querySelector("span.content")
+                elContent.style.display = 'block'
+
             }
-            if (gCellsShown === gCellsCount && gCountMarked === gNumMines) {
+            if (gCellsShown + gCountExploded + gCountMarked === gSize ** 2) {
                 gIsWin = true
                 gameOver()
             }
-            var elNeg = document.querySelector(`.cell-${i}-${j}`)
-            elNeg.classList.add('shown')
-            var elContent = elNeg.querySelector("span.content")
-            elContent.style.display = 'block'
 
         }
     }
@@ -172,9 +181,23 @@ function timerCycle() {
 }
 
 
-function resetLevel(){
-    init(gSize,gNumMines)
+function resetLevel() {
+    init(gSize, gNumMines)
 }
+
+function changeRightClickDefaul(mat) {
+    for (let i = 0; i < mat.length; i++) {
+        for (let j = 0; j < mat.length; j++) {
+            let cell = mat[i][j]
+            let elCell = document.querySelector(`.cell-${i}-${j}`)
+            elCell.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                rightclick(elCell, cell, i, j)
+            }, false);
+        }
+    }
+}
+
 
 
 // function getClassName(location) {

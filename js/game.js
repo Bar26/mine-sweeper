@@ -1,50 +1,51 @@
 'use strict'
 
-const MINE = `<img src="img/bomb.jpg" />`
-const FLAG = `<span class="flag"><img src="img/flag.jpg" /></span>`
-
-//FOR NOW
-var gNumMines
-var gSize
-var gElTimer = document.querySelector('.timer')
-var gTimeInterval
-var gBoard
-var gSec
-var gMin
-var gCountExploded
-var gCellsCount = gSize ** 2 - gNumMines
-var gCellsShown
-var gCountMarked
-var gIsWin
-var gNumClicks
-var gIsHintOn
+const MINE = `<img src="img/bomb.webp" />`
+const FLAG = `<span class="flag"><img src="img/flag.png" /></span>`
+const audio= new Audio('../sound/bomb-sound.wav')
+const winAudio = new Audio('../sound/win.wav')
+const loseAudio= new Audio('../sound/lose.wav')
 var gElSmiley = document.querySelector('.smiley')
 var gElLifes = document.querySelector('.heart span')
 var elSafeCount = document.querySelector('span.safeCount')
+var elHintBts = document.querySelectorAll('.hint button')
+var gElTimer = document.querySelector('.timer')
+var gNumMines
+var gSize
+var gTimeInterval
+var gBoard
+var gCountExploded
+var gCellsShown
+var gCountMarked
+var gIsWin
+var gIs7Boom
+var gNumClicks
+var gIsHintOn
 var gSafeClicks
-//
+var gIsGameOn
+var gMin
+var gSec
 
 
 function init(size = 4, numMines = 2) {
-
+    gIsGameOn = true
     if (gTimeInterval) clearInterval(gTimeInterval)
-    console.log(size)
-
     if (size === 4) gElLifes.innerHTML = '💝'
     else gElLifes.innerHTML = '💝💝💝'
-
     elSafeCount.innerHTML = '3'
     gSafeClicks = 3
+    for (var i = 0; i < elHintBts.length; i++) {
+        elHintBts[i].classList.remove('hit')
+    }
     gMines = []
     gSize = size
     gNumMines = numMines
     gBoard = createBoard(gSize)
-    createMines(gBoard, gNumMines)
-    setMinesNegsCount(gBoard)
     printMat(gBoard, ".container")
+    changeRightClickDefaul(gBoard)
     resetTimer()
     gElSmiley.innerHTML = NORMAL
-
+    gIs7Boom = false
     gCountExploded = 0
     gCellsShown = 0
     gCountMarked = 0
@@ -53,28 +54,30 @@ function init(size = 4, numMines = 2) {
     gMin = 0
 }
 
-
-
-
 function cellClicked(elCell, i, j) {
     var cell = gBoard[i][j]
+    if (!gIsGameOn) return
     if (cell.isShown) return
     if (cell.isMarked) return
     gNumClicks++
-    var elContent = elCell.querySelector("span.content")
     if (gNumClicks === 1) {
-        if (cell.isMine) changeMineLocation(cell, elContent)
+        createMines(gBoard, gNumMines, i, j)
+        setMinesNegsCount(gBoard)
+        printMat(gBoard, ".container")
         gTimeInterval = setInterval(timerCycle, 1000)
+        changeRightClickDefaul(gBoard)
     }
+    if (gNumClicks === 1) elCell = document.querySelector(`.cell-${i}-${j}`)
+    var elContent = elCell.querySelector("span.content")
+    cell.isShown = true
     if (gIsHintOn) {
         revealHint(elContent, i, j)
         return
     }
-    cell.isShown = true
     elCell.classList.add('shown')
     elContent.style.display = 'block'
-
     if (cell.isMine) {
+        audio.play()
         elCell.classList.add('explode')
         gCountExploded++
         console.log(gCountExploded)
@@ -91,18 +94,19 @@ function cellClicked(elCell, i, j) {
         }
     } else {
         gCellsShown++
-        if (gCellsShown === gCellsCount && gCountMarked === gNumMines) {
+        console.log(gCellsShown)
+        if (gCellsShown + gCountExploded + gCountMarked === gSize ** 2) {
             gIsWin = true
             gameOver()
         }
         if (!cell.minesAroundCount) {
             showNegs(gBoard, i, j)
         }
+
     }
 }
 
-
-function rightclick(elcell, cell) {     //TODO
+function rightclick(elcell, cell) {
     if (cell.isShown) return
     var elFlag = elcell.querySelector('span.flag')
     gNumClicks++
@@ -112,6 +116,7 @@ function rightclick(elcell, cell) {     //TODO
         elFlag.style.display = 'none'
         if (cell.isMine) {
             gCountMarked--
+            console.log(gCountMarked)
         }
 
     } else {
@@ -119,7 +124,8 @@ function rightclick(elcell, cell) {     //TODO
         elFlag.style.display = 'block'
         if (cell.isMine) {
             gCountMarked++
-            if (gCellsShown === gCellsCount && gCountMarked === gNumMines) {
+            console.log(gCountMarked)
+            if (gCellsShown + gCountExploded + gCountMarked === gSize ** 2) {
                 gIsWin = true
                 gameOver()
             }
@@ -128,10 +134,16 @@ function rightclick(elcell, cell) {     //TODO
 
 }
 
+function activate7Boom() {
+    gIs7Boom = true
+}
+
 
 function gameOver() {
+    gIsGameOn = false
 
     if (!gIsWin) {
+        loseAudio.play()
         for (var i = 0; i < gMines.length; i++) {
             var currMine = gMines[i]
             var elMine = document.querySelector(`.cell-${currMine.i}-${currMine.j}`)
@@ -142,6 +154,7 @@ function gameOver() {
         }
         gElSmiley.innerHTML = LOOSE
     } else {
+        winAudio.play()
         gElSmiley.innerHTML = WIN
     }
 
@@ -203,3 +216,4 @@ function revealSafeClick() {
     }, 1000)
 
 }
+

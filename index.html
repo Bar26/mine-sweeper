@@ -12,30 +12,42 @@
  
 
 <body onload="init()">
-    <button onclick="init(4,2)" class="level beginner">beginner</button>
-<button onclick="init(8,12)" class="level medium">medium</button>
-<button onclick="init(12,30)" class="level expert">expert</button>
-<button onclick="resetLevel()" class="smiley">😊</button>
-<div class="heart">lifes: <span></span></div>
-<div class="hint"> hints:
-    <button onclick="hintClicked(this)" class="last">💡</button>
-    <button onclick="hintClicked(this)" class="second">💡</button>
-    <button onclick="hintClicked(this)" class="last">💡</button>
-</div>
-<div class="safeClick">
-         <button onclick="revealSafeClick()"> safe click</button>
-         <div>clicks remained:<span class="safeCount"></span></div>
-        </div>
 
-    <div class="timer"></div>
+  
+
+    
+    <button class="play7Boom" onclick="activate7Boom()">play 7Boom!</button>
+    <div class="help">
+        <div class="hint"> hints:
+            <button onclick="hintClicked(this)" class="last">💡</button>
+            <button onclick="hintClicked(this)" class="second">💡</button>
+            <button onclick="hintClicked(this)" class="last">💡</button>
+        </div>
+        <div class="level">
+            <button onclick="init(4,2)" class="beginner">beginner</button>
+            <button onclick="init(8,12)" class="medium">medium</button>
+            <button onclick="init(12,30)" class="expert">expert</button>  
+        </div>
+            <div class="safeClick">
+                <button onclick="revealSafeClick()"> safe click</button>
+                <div>clicks remained:<span class="safeCount"></span></div>
+            </div>
+    </div>
+        
+ 
+    <div class="elements">
+        <div class="heart">lifes: <span></span></div>
+        <button onclick="resetLevel()" class="smiley">😊</button>
+        <div class="timer"></div>
+    </div>
+    
+    
+
     <div class="container">
 
 
      
     </div>
-
-
-
 
     <script src="js/utils.js"></script>
     <script src="js/game.js"></script>
